@@ -1,0 +1,10 @@
+plugins:
+  msgraph_polling_enabled:
+    default: false
+    validator: MsGraphPollSettingsValidator
+  msgraph_polling_mailbox: ""
+  msgraph_polling_client_id: ""
+  msgraph_polling_tenant_id: ""
+  msgraph_polling_oauth2_refresh_token:
+    default: ""
+    secret: true
