@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 CERN
+# SPDX-License-Identifier: MIT
+
+
 # frozen_string_literal: true
 
 # name: msgraph-polling
