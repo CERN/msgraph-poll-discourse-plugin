@@ -8,7 +8,7 @@
 # about: A plugin to enable polling mails using Microsoft Graph API
 # version: 1.0
 # authors: CERN
-# url: https://github.com
+# url: https://github.com/cern/msgraph-poll-discourse-plugin
 
 require_relative 'lib/msgraph-poller/api.rb'
 
