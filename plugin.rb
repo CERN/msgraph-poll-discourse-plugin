@@ -10,6 +10,8 @@
 # authors: CERN
 # url: https://github.com/cern/msgraph-poll-discourse-plugin
 
+gem "httparty", "0.21.0"
+
 require_relative 'lib/msgraph-poller/api.rb'
 
 require 'oauth2'
