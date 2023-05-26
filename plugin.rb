@@ -23,7 +23,11 @@ after_initialize do
 		def initialize
 			auth_url = "https://login.microsoftonline.com/#{SiteSetting.msgraph_polling_tenant_id}/oauth2/v2.0/token"
 			oauth_provider = OAuth2::Client.new(SiteSetting.msgraph_polling_client_id, nil, token_url: auth_url)
-			@token = OAuth2::AccessToken.new(oauth_provider, nil, refresh_token: SiteSetting.msgraph_polling_oauth2_refresh_token).refresh!
+			@token = OAuth2::AccessToken.new(oauth_provider, nil, refresh_token: SiteSetting.msgraph_polling_oauth2_refresh_token)
+
+			if self.enabled?
+				@token = @token.refresh!
+			end
 		end
 
 		def enabled?
