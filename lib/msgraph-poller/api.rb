@@ -8,9 +8,6 @@ require "faraday"
 require "json"
 
 class MsGraphAPI
-  class RequestError < StandardError
-  end
-
   class UnexpectedResponseCodeError < StandardError
   end
 
