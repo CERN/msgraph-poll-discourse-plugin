@@ -35,7 +35,10 @@ class MsGraphPollSettingsValidator
         )
 
       msgraph_api.get_messages_id
+
+      return true
     rescue StandardError => e
+      Rails.logger.warn("MSGraphAPI validation failed: #{e}")
       return false
     end
   end
