@@ -5,7 +5,7 @@
 # frozen_string_literal: true
 
 require 'oauth2'
-require 'httparty'
+require 'faraday'
 require 'json'
 
 class MsGraphAPI
@@ -22,13 +22,10 @@ class MsGraphAPI
   end
 
   def make_request(path, method, expected_response_code)
-    headers = {
-      Authorization: "Bearer #{@access_token}"
-    }
-
-    res = HTTParty.send(method, "#{@base_url}/#{path}", headers: headers)
+    conn = Faraday.new(url: @base_url, headers: { 'Authorization' => "Bearer #{@access_token}" })
+    res = conn.send(method, path)
       
-    throw UnexpectedResponseCodeError.new(res.code) if res.code != expected_response_code
+    throw UnexpectedResponseCodeError.new(res.status) if res.status != expected_response_code
 
     res.body
   end
