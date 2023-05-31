@@ -1,12 +1,11 @@
 # SPDX-FileCopyrightText: 2023 CERN
 # SPDX-License-Identifier: MIT
 
-
 # frozen_string_literal: true
 
-require 'oauth2'
-require 'faraday'
-require 'json'
+require "oauth2"
+require "faraday"
+require "json"
 
 class MsGraphAPI
   class RequestError < StandardError
@@ -22,10 +21,18 @@ class MsGraphAPI
   end
 
   def make_request(path, method, expected_response_code)
-    conn = Faraday.new(url: @base_url, headers: { 'Authorization' => "Bearer #{@access_token}" })
+    conn =
+      Faraday.new(
+        url: @base_url,
+        headers: {
+          "Authorization" => "Bearer #{@access_token}"
+        }
+      )
     res = conn.send(method, path)
-      
-    throw UnexpectedResponseCodeError.new(res.status) if res.status != expected_response_code
+
+    if res.status != expected_response_code
+      throw UnexpectedResponseCodeError.new(res.status)
+    end
 
     res.body
   end
@@ -35,11 +42,17 @@ class MsGraphAPI
   end
 
   def get_messages_id()
-    self.make_request_json("users/#{@email}/messages/?$select=id", :get, 200)['value'].map { |message| message['id'] }
+    self.make_request_json("users/#{@email}/messages/?$select=id", :get, 200)[
+      "value"
+    ].map { |message| message["id"] }
   end
 
   def get_message_mime(message_id)
-    self.make_request("users/#{@email}/messages/#{message_id}/$value", :get, 200)
+    self.make_request(
+      "users/#{@email}/messages/#{message_id}/$value",
+      :get,
+      200
+    )
   end
 
   def delete_message(message_id)
