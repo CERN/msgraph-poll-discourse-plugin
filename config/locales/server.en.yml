@@ -5,6 +5,8 @@ en:
     msgraph_polling_mailbox: "Mailbox to poll mails from"
     msgraph_polling_client_id: "Client id of the application registered in Azure"
     msgraph_polling_tenant_id: "Azure tenant id"
-
+    msgraph_polling_login_endpoint: "Microsoft login endpoint"
+    msgraph_polling_graph_endpoint: "Microsoft Graph API endpoint"
+    
   errors:
     msgraph_poll_settings: "There was an error while polling mails using MsGraph plugin. Check your settings"

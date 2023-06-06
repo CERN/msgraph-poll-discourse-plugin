@@ -19,7 +19,7 @@ after_initialize do
   class ::MsGraphEmailPoller < Email::Poller
     def initialize
       auth_url =
-        "https://login.microsoftonline.com/#{SiteSetting.msgraph_polling_tenant_id}/oauth2/v2.0/token"
+        "#{SiteSetting.msgraph_polling_login_endpoint}/#{SiteSetting.msgraph_polling_tenant_id}/oauth2/v2.0/token"
       oauth_provider =
         OAuth2::Client.new(
           SiteSetting.msgraph_polling_client_id,
@@ -50,7 +50,7 @@ after_initialize do
 
         msgraph_api =
           MsGraphAPI.new(
-            "https://graph.microsoft.com/v1.0",
+            SiteSetting.msgraph_polling_graph_endpoint,
             SiteSetting.msgraph_polling_mailbox,
             @token.token
           )

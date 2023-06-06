@@ -8,3 +8,7 @@ plugins:
   msgraph_polling_oauth2_refresh_token:
     default: ""
     secret: true
+  msgraph_polling_login_endpoint:
+    default: "https://login.microsoftonline.com"
+  msgraph_polling_graph_endpoint:
+    default: "https://graph.microsoft.com/v1.0"
