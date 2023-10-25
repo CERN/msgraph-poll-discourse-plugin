@@ -32,8 +32,14 @@ after_initialize do
           nil,
           refresh_token: SiteSetting.msgraph_polling_oauth2_refresh_token
         )
-
-      @token = @token.refresh! if self.enabled?
+      
+      begin
+        @token = @token.refresh! if self.enabled?
+      rescue StandardError => e
+        Rails.logger.error(
+          "Error while initializing MSGraph plugin: #{e}"
+        )
+      end
     end
 
     def enabled?
