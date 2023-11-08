@@ -48,6 +48,7 @@ after_initialize do
 
     def refresh_token_if_needed
       @token = @token.refresh! if @token.expired?
+      SiteSetting.msgraph_polling_oauth2_refresh_token = @token.refresh_token
     end
 
     def poll_mailbox(process_cb)
