@@ -20,7 +20,7 @@ after_initialize do
     def initialize
       auth_url =
         "#{SiteSetting.msgraph_polling_login_endpoint}/#{SiteSetting.msgraph_polling_tenant_id}/oauth2/v2.0/token"
-      oauth_provider =
+      @oauth_provider =
         OAuth2::Client.new(
           SiteSetting.msgraph_polling_client_id,
           nil,
@@ -49,7 +49,7 @@ after_initialize do
          unless SiteSetting.msgraph_polling_oauth2_refresh_token.empty?
             @token =
               OAuth2::AccessToken.new(
-                oauth_provider,
+                @oauth_provider,
                 nil,
                 refresh_token: SiteSetting.msgraph_polling_oauth2_refresh_token
               )
