@@ -17,39 +17,36 @@ enabled_site_setting :msgraph_polling_enabled
 
 after_initialize do
   class ::MsGraphEmailPoller < Email::Poller
-    def initialize
-      auth_url =
-        "#{SiteSetting.msgraph_polling_login_endpoint}/#{SiteSetting.msgraph_polling_tenant_id}/oauth2/v2.0/token"
-      oauth_provider =
-        OAuth2::Client.new(
-          SiteSetting.msgraph_polling_client_id,
-          nil,
-          token_url: auth_url
-        )
-      @token =
-        OAuth2::AccessToken.new(
-          oauth_provider,
-          nil,
-          refresh_token: SiteSetting.msgraph_polling_oauth2_refresh_token
-        )
-      
-      begin
-        @token = @token.refresh! if self.enabled?
-        SiteSetting.msgraph_polling_oauth2_refresh_token = @token.refresh_token
-      rescue StandardError => e
-        Rails.logger.error(
-          "Error while initializing MSGraph plugin: #{e}"
-        )
-      end
-    end
-
     def enabled?
       SiteSetting.msgraph_polling_enabled?
     end
 
+    # The token is built lazily: the poller is instantiated at boot (including
+    # asset precompilation, where site settings are blank), and oauth2 raises
+    # when an AccessToken has neither a token nor a refresh token.
     def refresh_token_if_needed
-      @token = @token.refresh! if @token.expired?
+      return if @token && !@token.expired?
+
+      @token = (@token || initial_token).refresh!
       SiteSetting.msgraph_polling_oauth2_refresh_token = @token.refresh_token
+    end
+
+    def initial_token
+      OAuth2::AccessToken.new(
+        oauth_client,
+        nil,
+        refresh_token: SiteSetting.msgraph_polling_oauth2_refresh_token
+      )
+    end
+
+    def oauth_client
+      auth_url =
+        "#{SiteSetting.msgraph_polling_login_endpoint}/#{SiteSetting.msgraph_polling_tenant_id}/oauth2/v2.0/token"
+      OAuth2::Client.new(
+        SiteSetting.msgraph_polling_client_id,
+        nil,
+        token_url: auth_url
+      )
     end
 
     def poll_mailbox(process_cb)
